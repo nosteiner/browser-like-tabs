@@ -42,8 +42,8 @@ export class TabSingleComponent implements AfterViewInit {
     return clicks$
       .pipe(
         buffer(clicks$.pipe(debounce(() => interval(200)))),
-        map(clicksWithin300ms => clicksWithin300ms.length),
-        filter(clicksWithin300ms => clicksWithin300ms === 2)
+        map(clicksWithin200ms => clicksWithin200ms.length),
+        filter(clicksWithin200ms => clicksWithin200ms === 2)
       );
   }
 

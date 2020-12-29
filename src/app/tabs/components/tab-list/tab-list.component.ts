@@ -50,14 +50,24 @@ export class TabListComponent implements OnInit, OnDestroy {
     this.updateOrderedTabIdsOrder(event.previousIndex, event.currentIndex);
   }
 
+  /**
+   * Update the values of the orderedTabIds array by the current tab list id values
+   *  * This method mutates the array 
+   * @param tabList 
+   */
   updateOrderedTabIdsValues(
-    tabList: Record<number, ITab>
+    tabList: Record<string, ITab>
   ): void {
     const newValues = difference(keys(tabList), this.orderedTabIds);
     this.orderedTabIds = filter(this.orderedTabIds, id => !isNil(tabList[id]))
       .concat(newValues);
   }
 
+  /**
+ * Update the order of the elements in the orderedTabIds array
+ * This method mutates the array 
+ * @param tabList 
+ */
   updateOrderedTabIdsOrder(
     previousIndex: number,
     currentIndex: number

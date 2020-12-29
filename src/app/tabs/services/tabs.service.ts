@@ -41,6 +41,13 @@ export class TabsService {
     };
   };
 
+  /**
+   * Create a new tab record with initial values. 
+   * The id is serial and is equal to the current tabIdSequence.
+   * Increece the sequence after creation
+   * If the maximum tabs exceeded an alert will pop
+   * Set the new values and update subscribers with changes
+   */
   public create(): void {
     if (this.isExceededMaxTab) {
       alert('Maximum tabs exceeded');
@@ -58,6 +65,11 @@ export class TabsService {
     this._activeTabId$.next(newTab.id);
   }
 
+  /**
+   * Create a new tabList with the updated data
+   * Set the new values and update subscribers with changes
+   * @param tabInput is the data to update
+   */
   public update(tabInput: ITab): void {
     this._tabList$.next({
       ...this._tabList$.value,
@@ -65,11 +77,20 @@ export class TabsService {
     });
   };
 
+  /**
+   * Create a new tabList without the tab to delete 
+   * Set the new values and update subscribers with changes
+   * @param id is the id of the tab to delete
+   */
   public delete(id: string): void {
     const { [id]: tabsToDelete, ...tabsToKeep } = this._tabList$.value;
     this._tabList$.next(tabsToKeep);
   };
 
+  /**
+   * Set the new ActiveTabId and update subscribers with changes
+   * @param id is the new active tab id
+   */
   public updateActiveTabId(id: string): void {
     this._activeTabId$.next(id);
   }
