@@ -1,0 +1,11 @@
+<div class="tab-single-container" #tabElement [class.active]="isActive">
+	<button class="close-btn transparent-btn" (click)="closeTab.emit()">⨯</button>
+	<div class="tab-content">
+		<div class="tab-title ellipse" *ngIf="!isEditMode" (click)="isEditMode = true">
+			{{tab.title | titlecase}}
+		</div>
+		<input class="tab-input" type=" text" [ngModel]="tab.title" (ngModelChange)="onTitleChange($event)"
+			(clickElsewhere)="isEditMode = false" (blur)="isEditMode = false" (mousedown)="$event.stopPropagation();"
+			(keydown.enter)="$event.target.blur();" *ngIf="isEditMode" />
+	</div>
+</div>

@@ -1,0 +1,16 @@
+<ng-container *ngIf="activeTabId$ | async as activeTabId">
+	<ng-container *ngIf="tabList$ | async as tabList">
+		<div class="tab-list-container">
+			<div class="tab-list" cdkDropList cdkDropListOrientation="horizontal"
+				(cdkDropListDropped)="onDropElement($event)">
+				<div class="draggable-item" *ngFor="let tabId of orderedTabIds" cdkDragBoundary=".tab-list"
+					cdkDragLockAxis="x" cdkDrag>
+					<app-tab-single (click)="onTabClick(tabId)" [tab]="tabList[tabId]" (tabChange)="onTabChange($event)"
+						(closeTab)="onCloseTab(tabId)" [isActive]="activeTabId == tabId">
+					</app-tab-single>
+				</div>
+			</div>
+			<button class="add-new-btn transparent-btn" (click)="onAddNewTab()">＋</button>
+		</div>
+	</ng-container>
+</ng-container>

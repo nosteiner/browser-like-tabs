@@ -1,0 +1,14 @@
+.active-tab-container {
+	height: 100%;
+	padding: 70px;
+	box-sizing: border-box;
+	border-radius: 0px 0px 4px 4px;
+	box-shadow: 0px 0px 10px -6px rgba(0, 0, 0, 0.219);
+	background: #fff;
+
+	.tab-title {
+		color: var(--base-primary);
+		font-size: 100px;
+		font-weight: 300;
+	}
+}
