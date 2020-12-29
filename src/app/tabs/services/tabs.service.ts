@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { keys } from 'lodash';
-import { Subject } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 export interface ITab {
   id: string;
@@ -15,15 +14,15 @@ export class TabsService {
   MAX_TAB = 14;
   tabIdSequence = 0;
 
-  private _tabList: Record<string, ITab> = this.createInitialTabList();
-  private _tabList$ = new Subject<Record<string, ITab>>();
-  readonly tabList$ = this._tabList$.asObservable().pipe(startWith(this._tabList));
+  private _tabList$ = new BehaviorSubject<Record<string, ITab>>(this.createInitialTabList());
+  readonly tabList$ = this._tabList$.asObservable();
 
-  private _activeTabId = String(this.tabIdSequence);
-  private _activeTabId$ = new Subject<string>();
-  readonly activeTabId$ = this._activeTabId$.asObservable().pipe(startWith(this._activeTabId));;
+  private _activeTabId$ = new BehaviorSubject<string>(String(this.tabIdSequence));
+  readonly activeTabId$ = this._activeTabId$.asObservable();
 
-  public get isExceededMaxTab() { return keys(this._tabList).length === this.MAX_TAB; }
+  public get isExceededMaxTab() {
+    return keys(this._tabList$.value).length === this.MAX_TAB;
+  }
 
   constructor() {
   }
@@ -31,7 +30,7 @@ export class TabsService {
   private createInitialTab(id: string): ITab {
     return {
       id,
-      title: 'New tab'
+      title: 'New Tab'
     };
   }
 
@@ -49,26 +48,29 @@ export class TabsService {
     }
 
     this.tabIdSequence++;
-
     const newId = String(this.tabIdSequence);
-    this._tabList[newId] = this.createInitialTab(newId);
+    const newTab = this.createInitialTab(newId);
 
-    this._tabList$.next(this._tabList);
-    this._activeTabId$.next(newId);
+    this._tabList$.next({
+      ...this._tabList$.value,
+      [newTab.id]: newTab
+    });
+    this._activeTabId$.next(newTab.id);
   }
 
   public update(tabInput: ITab): void {
-    this._tabList[tabInput.id] = tabInput;
-    this._tabList$.next(this._tabList);
+    this._tabList$.next({
+      ...this._tabList$.value,
+      [tabInput.id]: tabInput
+    });
   };
 
   public delete(id: string): void {
-    delete this._tabList[id];
-    this._tabList$.next(this._tabList);
+    const { [id]: tabsToDelete, ...tabsToKeep } = this._tabList$.value;
+    this._tabList$.next(tabsToKeep);
   };
 
   public updateActiveTabId(id: string): void {
-    this._activeTabId = id;
-    this._activeTabId$.next(this._activeTabId);
+    this._activeTabId$.next(id);
   }
 }
